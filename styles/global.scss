@@ -1,0 +1,37 @@
+$mobile-breakpoint: 767px;
+$tablet-breakpoint: 1023px;
+
+@mixin mobile {
+  @media (max-width: #{$mobile-breakpoint}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  $min-tablet-width: #{$mobile-breakpoint} + 1; // Calculate the minimum width for tablets
+  @media (min-width: #{$min-tablet-width}) and (max-width: #{$tablet-breakpoint}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{$tablet-breakpoint} + 1) {
+    @content;
+  }
+}
+
+// \.some-class {
+//     // Styles for all devices
+//   }
+
+//   @include mobile {
+//     // Styles for mobile devices
+//   }
+
+//   @include tablet {
+//     // Styles for tablet devices
+//   }
+
+//   @include desktop {
+//     // Styles for desktop devices
+//   }

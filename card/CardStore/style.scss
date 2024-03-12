@@ -1,0 +1,71 @@
+.h-card-store {
+  /* try to check media query 1st */
+  height: 60svh !important;
+  min-width: 200px;
+}
+
+.card-container {
+  display: flex;
+  overflow-x: auto; // Enable horizontal scrolling
+
+  // Define spacing between cards
+  margin: 0 -10px; // Adjust as needed
+  padding: 10px; // Adjust as needed
+
+  // Define media query for responsiveness
+  @media (max-width: 767px) {
+    // For mobile devices
+    flex-wrap: nowrap; // Ensure cards are displayed in a single row
+
+    .card {
+      width: calc(100vw - 20px); // Adjust for spacing and padding
+      min-width: 50%; // Ensure at least half of the card is visible
+    }
+  }
+
+  @media (min-width: 768px) {
+    // For desktop devices
+    flex-wrap: nowrap; // Ensure cards are displayed in a single row
+
+    .card {
+      width: calc((100vw - 80px) / 4); // Adjust for spacing and padding
+      min-width: 25%; // Ensure at least a quarter of the card is visible
+    }
+  }
+}
+
+.card-product {
+  // background-color: #fff; // Adjust background color as needed
+  // border: 1px solid #ccc; // Adjust border color and width as needed
+  // border-radius: 8px; // Adjust border radius as needed
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Adjust box shadow as needed
+  margin: 0 30px; // Adjust horizontal margin as needed
+  height: 60vh;
+
+  @media (max-width: 1024px) {
+    // For tablets and larger devices
+    height: 350px; // Fixed height for tablets and larger devices
+  }
+  // @media (max-width: 1024px) and (min-height: 768px) {
+  //   // For tablets and larger devices
+  //   height: 450px; // Fixed height for tablets and larger devices
+  //   width: 100px;
+  // }
+
+  @media (max-width: 767px) {
+    // For mobile devices
+    margin: 0 10px; // Adjust horizontal margin as needed
+
+    width: calc(
+      (100vw) / 2
+    ); // Adjust width to fit viewport width minus margins and padding, divided by 2 for 1 card + half of another card
+    min-width: 50%; // Ensure at least half of the card is visible
+  }
+  @media (min-width: 768px) {
+    // For desktop devices
+    width: calc(
+      (100vw - 80px) / 4
+    ); // Adjust width to fit viewport width minus margins and padding, divided by the number of cards per row
+    min-width: 25%; // Ensure at least a quarter of the card is visible
+  }
+}
