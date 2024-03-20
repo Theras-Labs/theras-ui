@@ -1,6 +1,7 @@
 import Rarity from "@/_ui/utils/Rarity";
 import "./style.scss";
 import { Subtitle, Title } from "@/_ui/Typography";
+import Avatar from "@/_ui/profile/avatar";
 // import useMeasure from "react-use-measure";
 // options: skew, normal, border
 // promo,
@@ -8,11 +9,8 @@ const CardStore = ({
   children,
   // onClick = () => {},
   bg = "transparent",
-  bgColor = "",
-
   ...props
 }) => {
-  console.log(bg, bgColor, "color bg");
   // bg
   // type => 3d ()
   // overlap_3d = true ?
@@ -43,18 +41,14 @@ const CardStore = ({
       {...props}>
       <div className="relative flex  flex-col justify-between  h-full ">
         {/* {children} */}
-        {/* Image */}
         {/* <div>HEADER time left</div> */}
         <div className="absolute w-full h-full xl:p-6 p-4 text-center font-bold text-xl ">
           {/* {props?.title || "TITLE"} */}
           <Header {...props} />
         </div>
-        <Content {...props?.content} />
+        <Content {...props?.display} />
         {/* <div>promo</div> */}
-        <div className="absolute w-full bottom-0 p-4 text-center bg-pink-400 font-bold text-xl  rounded-b-md">
-          {/* propagate */}
-          Coins, 2 coins?
-        </div>
+        <Footer {...props} />
       </div>
     </div>
   );
@@ -65,23 +59,25 @@ export default CardStore;
 const Header = (props) => {
   // check header starts with div?
   // return <div dangerouslySetInnerHTML={{ __html: props?.header?.header }} />;
-
-  return (
-    <div>
-      <Subtitle>Armstring IMP</Subtitle>
-      <Rarity />
-    </div>
-  );
-
+  if (!props?.header?.htmlTag) {
+    return (
+      <div className={`${props?.header?.bgColor}`}>
+        <Subtitle className={` ${props?.header?.textColor} `}>
+          {props?.title}
+        </Subtitle>
+        <Rarity text={props?.rarity} />
+      </div>
+    );
+  } else return <div>{/* dangerouslyHTML */}</div>;
   //
 };
 
 const Content = (props) => {
-  if (props?.contentType === "image") {
+  if (props?.type === "image") {
     return (
       <img
-        src={props?.contentUrl}
-        className={` w-full h-full  object-fit -rotate-20 `}
+        src={props?.assetUrl}
+        className={` w-full h-full ${props?.classNameImage}  `}
       />
     );
   }
@@ -96,4 +92,37 @@ const Content = (props) => {
     return null;
   }
   // return
+};
+
+const Footer = (props) => {
+  return (
+    <div
+      // quickbuy
+      // onClick={}
+      className={` 
+  absolute w-full flex justify-evenly bottom-0 p-4 text-center 
+  ${props?.footer?.bgColor}
+  font-bold text-xl space-x-2 rounded-b-md
+   `}>
+      {/* propagate */}
+      {/* highlighted */}
+      {props?.display?.prices?.map((item, i) => {
+        return (
+          <div
+            key={`displayprice` + i}
+            className="flex justify-center items-center ">
+            <Avatar
+              imageUrl={item?.network_logo}
+              className={` w-7 h-7 ${item?.bgToken}`}
+            />
+            <Subtitle
+              className={`!font-bold  ml-2 ${props?.footer?.textColor}`}>
+              {item?.price}
+            </Subtitle>
+          </div>
+        );
+      })}
+      {/* more than 1 length of price? +9 */}
+    </div>
+  );
 };

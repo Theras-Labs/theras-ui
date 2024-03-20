@@ -7,7 +7,10 @@ type scrollVisibilityApiType = React.ContextType<typeof VisibilityContext>;
 
 export default function HorizontalScroll({ children, ...props }) {
   return (
-    <div className="flexx flex-col justify-center row border border-red-500 h-full o">
+    <div
+    // className="flexx flex-col justify-center row h-full "
+    // className="flexx flex-col justify-center row h-full "
+    >
       <ScrollMenu
         // Footer={<div>FOOTER</div>}
         {...props}

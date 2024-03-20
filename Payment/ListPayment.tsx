@@ -1,12 +1,12 @@
-import { PAYMENT_OPTIONS } from "@/components/product/detail";
 import React from "react";
 import BlockTitle from "../block/BlockTitle";
 import { Label } from "../Typography";
 import RowPayment from "./RowPayment";
+import { PAYMENT_OPTIONS } from "@/components/product/mock-shop";
 
-export default function ListPayment({ tab = 0 }) {
+export default function ListPayment({ tab = 0, data }) {
   //GET SELECTED CHAIN
-  const CHAIN_SELECTED = PAYMENT_OPTIONS[tab];
+  const CHAIN_SELECTED = data?.payments[tab];
   return (
     <>
       <BlockTitle

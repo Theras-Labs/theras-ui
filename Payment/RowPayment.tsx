@@ -33,9 +33,12 @@ export default function RowPayment({
     <>
       <div className={`flex justify-between py-4 `}>
         <div
-          className={`${padding} ${border} flex justify-center items-center  w-60 pb-4 ml-2 mr-1 !font-bold text-green-400 `}>
+          className={`${padding} ${border} flex justify-center items-center  w-60 pb-4 ml-2 mr-1 !font-bold text-green-400  `}>
           {props?.network_logo && props?.isCrypto ? (
-            <img src={props?.network_logo} className="w-8 h-8" />
+            <img
+              src={props?.network_logo}
+              className={`w-8 h-8  ${props?.bgChain}`}
+            />
           ) : (
             "FIAT"
           )}
@@ -47,7 +50,10 @@ export default function RowPayment({
         {/* supply link contract */}
         <div className={`${base} mr-1 flex justify-center items-center`}>
           {props?.currency && props?.isCrypto ? (
-            <img src={props?.symbolUrl} className="w-4 h-4 " />
+            <img
+              src={props?.symbolUrl}
+              className={`w-5 h-5 ${props?.bgToken}`}
+            />
           ) : (
             props?.symbol
           )}

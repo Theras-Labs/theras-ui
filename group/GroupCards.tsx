@@ -1,5 +1,5 @@
 import React from "react";
-import CardProduct from "../card/CardStore";
+import CardProduct from "../Card/CardStore";
 import { useNavigate } from "react-router-dom";
 
 export default function GroupCards({
@@ -13,22 +13,19 @@ export default function GroupCards({
   // distance
   // horizontal = true
   //
+  bgColor = "",
   ...props
 }) {
   return (
-    <div className="group-comp border border-green-500 xl:p-3 ">
-      <div className={`${!title && "invisible"} text-center `}>
+    <div className={`group-comp  xl:p-3  xl:mx-10 mx-2 rounded-md ${bgColor}`}>
+      <div className={`${!title && "invisible"} text-center font-bold  `}>
         {title || "TITLE"}
       </div>
       <div className="flex  p-10">
         {props?.sale_list?.map((item, i) => (
           <CardProduct
             // key={`card-store-${i}`}
-            // onClick={() => onNavigate(item?.id, item)}
-            {...{
-              bg: "bg-blue-500",
-              bgColor: "bg-blue-500",
-            }}
+            onClick={() => onNavigate(item?.id, item)}
             {...item}
           />
         ))}
