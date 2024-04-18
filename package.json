@@ -1,6 +1,7 @@
 {
-  "name": "@theras/ui",
+  "name": "@theras_labs/ui",
   "version": "1.0.0",
+  "author": "dellwatson",
   "description": "A set of components for browser game ",
   "license": "MIT",
   "devDependencies": {
