@@ -1,7 +1,7 @@
-import Rarity from "@/_ui/src/utils/Rarity";
+import Rarity from "../../utils/Rarity";
 import "./style.scss";
-import { Subtitle, Title } from "@/_ui/src/Typography";
-import Avatar from "@/_ui/src/profile/avatar";
+import { Subtitle, Title } from "../../Typography";
+import Avatar from "../../profile/avatar";
 // import useMeasure from "react-use-measure";
 // options: skew, normal, border
 // promo,

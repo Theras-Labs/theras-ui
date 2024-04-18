@@ -6,11 +6,11 @@ import {
   isRedirectable,
   WalletName,
 } from "@aptos-labs/wallet-adapter-react";
-import { profileStore } from "@/_core/hooks/useProfile";
-import { shortenEthAddress, shortenString } from "@/utils/ethaddress";
-import Avatar from "@/_ui/src/profile/avatar";
-import { GravatarUrl } from "@/utils/Gravatar";
-import SimpleProfileCard from "@/_ui/src/profile/SimpleProfileCard";
+// import { profileStore } from "@theras_labs/core/hooks/useProfile";
+import { shortenEthAddress, shortenString } from "../../utils/ethaddress";
+import Avatar from "../../profile/avatar";
+import { GravatarUrl } from "../../utils/Gravatar";
+import SimpleProfileCard from "../../profile/SimpleProfileCard";
 
 export default function AptosWallet() {
   return (
@@ -26,11 +26,11 @@ export const CHAIN_NAME_APTOS = "Aptos";
 export const WalletButtons = () => {
   const { wallets, connected, isLoading } = useWallet();
 
-  if (connected) {
-    // profile aptos -> TGEM balances, NFTs ? etc
-    // BE -> last game etc?
-    return <ProfileAptos />;
-  }
+  // if (connected) {
+  //   // profile aptos -> TGEM balances, NFTs ? etc
+  //   // BE -> last game etc?
+  //   return <ProfileAptos />;
+  // }
 
   if (isLoading || !wallets[0]) {
     return <div className={"opacity-50 cursor-not-allowed"}>Loading...</div>;
@@ -40,31 +40,32 @@ export const WalletButtons = () => {
 };
 
 const ProfileAptos = () => {
-  const [currentProfile, setProfile] = useState(null);
-  const { getProfileProvider, removeProfile, profiles } = profileStore();
-  const { wallets, connected, disconnect, isLoading, account } = useWallet();
+  // const [currentProfile, setProfile] = useState(null);
+  // const { getProfileProvider, removeProfile, profiles } = profileStore();
+  // // const { getProfileProvider, removeProfile, profiles } = profileStore();
+  // const { wallets, connected, disconnect, isLoading, account } = useWallet();
 
-  useEffect(() => {
-    const _profileNow = getProfileProvider("move");
-    setProfile(_profileNow);
-  }, [account]);
-  // load BE and get profile name?
-  if (!currentProfile) return null;
+  // useEffect(() => {
+  //   const _profileNow = getProfileProvider("move");
+  //   setProfile(_profileNow);
+  // }, [account]);
+  // // load BE and get profile name?
+  // if (!currentProfile) return null;
 
-  return (
-    <div className="w-full md:flex items-center  justify-center">
-      <SimpleProfileCard
-        {...{
-          currentProfile,
-          onDisconnect: () => {
-            disconnect();
-            removeProfile(currentProfile);
-            setProfile(null);
-          },
-        }}
-      />
-    </div>
-  );
+  // return (
+  //   <div className="w-full md:flex items-center  justify-center">
+  //     <SimpleProfileCard
+  //       {...{
+  //         currentProfile,
+  //         onDisconnect: () => {
+  //           disconnect();
+  //           removeProfile(currentProfile);
+  //           setProfile(null);
+  //         },
+  //       }}
+  //     />
+  //   </div>
+  // );
 };
 
 const WalletView = ({ wallet }: { wallet: Wallet }) => {
