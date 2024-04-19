@@ -1,5 +1,6 @@
-import { NeonH4 } from "react-neon-components";
+// import { NeonH4 } from "react-neon-components";
 
 export default function GlowingText({ children, ...rest }) {
-  return <NeonH4 {...rest}>{children}</NeonH4>;
+  // return <NeonH4 {...rest}>{children}</NeonH4>;
+  return <div>{children}</div>;
 }

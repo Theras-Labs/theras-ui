@@ -1,6 +1,6 @@
 {
   "name": "@theras_labs/ui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "dellwatson",
   "description": "A set of components for browser game ",
   "license": "MIT",
@@ -14,8 +14,28 @@
     "@storybook/react": "^8.0.8",
     "@storybook/react-vite": "^8.0.8",
     "@storybook/test": "^8.0.8",
+    "styled-components": "^6.0.8",
+    "typescript": "^5.0.2",
     "prop-types": "^15.8.1",
     "storybook": "^8.0.8"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.7.17",
+    "@react-spring/web": "^9.7.3",
+    "@studio-freight/hamo": "^0.6.28",
+    "@unocss/reset": "^0.55.2",
+    "@web3modal/wagmi": "^3.3.2",
+    "detect-gpu": "^5.0.37",
+    "get-starknet-core": "^3.2.0",
+    "react-horizontal-scrolling-menu": "^4.1.2",
+    "react-icons": "^4.11.0",
+    "react-neon-components": "^0.2.0",
+    "react-toastify": "^9.1.3",
+    "swiper": "^10.3.1"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "styled-components": "^6.0.8"
   },
   "files": [
     "src/*"
