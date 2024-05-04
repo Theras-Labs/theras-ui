@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import ModalPayment from "../Modal/ModalPayment";
 import usePurchase from "@/_core/hooks/usePurchase";
+import useTicketApi from "@/_backend/data/requestTicket";
+import { useAccount } from "wagmi";
 
 export default function RowPayment({
   hasBorderBottom = true,
@@ -10,6 +12,7 @@ export default function RowPayment({
   const border = hasBorderBottom ? "border-b-[1px] border-gray-600" : "";
   const base = `${padding} ${border} w-full pb-4 text-center`;
   const currentTimestamp = String(new Date().getTime());
+  const { requestTicket } = useTicketApi();
 
   const [visible, setVisible] = useState(false);
 
@@ -17,23 +20,60 @@ export default function RowPayment({
     (o) => o?.network?.toLowerCase() === props?.network?.toLowerCase()
   );
   // console.log(NFT_DETAIL, "detail nft", props);
+  const { address } = useAccount();
+
+  // ticket [0] = address user
+  // args -> [last] = ticket
+  const value = [
+    true, // 1
+    props?.product_address, // sepolia //2 //product Address
+    "0x0000000000000000000000000000000000000000", // 3
+    props?.price_in_wei, //price //4
+    0, // token_id // 5
+    1, // //quantity //6
+    2, // token type, erc1155 //7
+    0, // 8
+    1000, // 9
+    "0x0000000000000000000000000000000000000000", //10
+  ];
+  // change value when account is changed
+
+  // const args = [
+  //   ...value,
+  //   // ticketPurchase // final args
+  // ]
+  const [args, setArgs] = useState([...value]);
+  console.log(
+    `
+    props?.provider,
+    props?.network,`,
+    props?.provider, // undefind
+    props?.network, //testnet-tara
+    props,
+    "DATA"
+  );
 
   const { write } = usePurchase(
     props?.provider,
     props?.network,
+    // props?.network,
     // abi structure for args?,
     {
-      contractAddress: props?.storeAddress,
-      contractName: props?.contractName,
-      functionName: props?.functionPurchaseName,
+      contractAddress: props?.shop_address, //  ->
+      // contractAddress: props?.storeAddress, //  ->
+      contractName: "Theras Shop",
+      // contractName: props?.contractName,
+      // functionName: props?.functionPurchaseName, //buyProduct
+      functionName: "buyProduct", //buyProduct
       // change args into dynamic? from backend?
-      args: [
-        // address + timestamp
-        `MODEL_${props?.listingDetail?.id}__${currentTimestamp}`, //todo: add address user
-        // `MODEL_${props?.id}__${currentTimestamp}`,
-        props?.price_in_wei,
-        // props?.listingDetail?.listingId,
-      ],
+      args,
+      // args: [
+      //   // // address + timestamp
+      //   // `MODEL_${props?.listingDetail?.id}__${currentTimestamp}`, //todo: add address user
+      //   // // `MODEL_${props?.id}__${currentTimestamp}`,
+      //   // props?.price_in_wei,
+      //   // // props?.listingDetail?.listingId,
+      // ],
     }
   );
 
@@ -42,8 +82,62 @@ export default function RowPayment({
     // props?.listingNetwork?.storeAddress
     // props?.listingNetwork?.contractName
     // props?.listingNetwork?.functionPurchaseName
+
+    // request of ticket
+    console.log("handle purchase");
+    // Example usage
+
+    // "address", // msg.sender
+    // "bool", // isnative
+    // "address", // product address
+    // "address", //erc20 token
+    // "uint256", // payment amount
+    // "uint256", //productId //
+    // "uint256", //quantity  // 1
+    // "uint256", //tokenType // 2
+    // "uint256", //paymentAmount //
+    // "uint256", //payoutpercentDenominator //
+    //   "address", //brokerAddress //
+
+    // get address contract, price, token_id, quantity, chain_id
+    const ticketParameters = {
+      types: [
+        "address",
+        "bool",
+        "address",
+        "address",
+        "uint256",
+        "uint256",
+        "uint256",
+        "uint256",
+        "uint256",
+        "uint256",
+        "address",
+      ],
+      values: [address, ...value],
+    };
+
+    console.log("requesting ticket with", [address, ...value]);
+    // request of ticket
+    const ticketPurchase = await requestTicket(ticketParameters);
+    // const ticketPurchase = [
+    //   "0x0c68813590ec3b06debb2ec77f1204011533a9ba9395ee5b00f15d879c5628ef",
+    //   "0x2686f1e5cf901cea1411dad6e6d34b45a5f0445f2eb4bd6501f14afe1a78589f",
+    //   28,
+    // ]
+    // use ticketPurchase to include in the args again
+
+    // Update args with ticketPurchase
+    setArgs([...value, ticketPurchase]);
+
+    //will have problem on differnt time, in case price is change?...
+    // so data should BE from BE too, and compute it on client later. not the other around
+    // doesnt matter? the block difference can be exploited if price changed?
+
     try {
-      write();
+      if (args?.length === 11) {
+        write();
+      }
     } catch (error) {
       //
     } finally {
