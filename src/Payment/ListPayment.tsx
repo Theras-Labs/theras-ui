@@ -4,9 +4,14 @@ import { Label } from "../Typography";
 import RowPayment from "./RowPayment";
 import { PAYMENT_OPTIONS } from "@/components/product/mock-shop";
 
-export default function ListPayment({ tab = 0, data }) {
+export default function ListPayment({
+  tab = 0,
+  data,
+  paymentOptions = [],
+  selectedChain,
+}) {
   //GET SELECTED CHAIN
-  const CHAIN_SELECTED = data?.payments[tab];
+  // const CHAIN_SELECTED = data?.payments[tab];
   return (
     <>
       <BlockTitle
@@ -24,20 +29,23 @@ export default function ListPayment({ tab = 0, data }) {
         {/* opensea label, 0x smrt contract */}
         {/* chain, currency + price, usd price . action*/}
         <RowPayment />
-        {CHAIN_SELECTED?.payment_options.map((item, i) => (
-          <RowPayment
-            {...item}
-            hasBorderBottom={CHAIN_SELECTED?.payment_options?.length - 1 !== i}
-            {...{
-              listingDetail: data,
-              listingNetwork: CHAIN_SELECTED,
-            }}
-          />
-        ))}
+        {paymentOptions.map((item, i) => {
+          console.log(item, "ITEM HERE");
+          return (
+            <RowPayment
+              {...item}
+              {...{
+                listingDetail: data,
+                selectedChain,
+                hasBorderBottom: paymentOptions?.length - 1 !== i,
+              }}
+            />
+          );
+        })}
         {/* pay */}
         <div className="text-center">
           <Label className="!text-xs font-thin">
-            *You can purchase {CHAIN_SELECTED?.network} NFT with token from
+            *You can purchase {selectedChain?.network?.name} NFT with token from
             different chain here now. &nbsp;
             <span className="text-green-300">by Theras Labs</span>
           </Label>

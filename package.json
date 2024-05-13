@@ -24,7 +24,6 @@
     "@react-spring/web": "^9.7.3",
     "@studio-freight/hamo": "^0.6.28",
     "@unocss/reset": "^0.55.2",
-    "@web3modal/wagmi": "^3.3.2",
     "detect-gpu": "^5.0.37",
     "get-starknet-core": "^3.2.0",
     "react-horizontal-scrolling-menu": "^4.1.2",

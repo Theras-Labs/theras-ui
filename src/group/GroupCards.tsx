@@ -16,18 +16,21 @@ export default function GroupCards({
   bgColor = "",
   ...props
 }) {
+  // console.log(props,'DAATA DETAIL')
   return (
     <div className={`group-comp  xl:p-3  xl:mx-10 mx-2 rounded-md ${bgColor}`}>
       <div className={`${!title && "invisible"} text-center font-bold  `}>
         {title || "TITLE"}
       </div>
       <div className="flex  p-10">
-        {props?.sale_list?.map((item, i) => (
+        {props?.list?.map((item, i) => (
           <CardProduct
-            // key={`card-store-${i}`}
-            onClick={() => onNavigate(item?.listingId, item)}
+            // goes to starex_nft_product
+            key={`card-store-${i}`}
+            onClick={() => onNavigate(item?.id, item)} // id draft product here
             {...item}
           />
+          // <div />
         ))}
       </div>
     </div>

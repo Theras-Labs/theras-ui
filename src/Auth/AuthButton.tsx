@@ -5,7 +5,7 @@ import Profile from "./Profile";
 import StarknetWallet, { shortenString } from "./wallets/starknet-wallet";
 import authStore from "@/store/auth-store";
 // import ModalAuth from "./modal-auth";
-import Avatar from "@/_ui/src/profile/avatar";
+import Avatar from "@theras_labs/ui/src/profile/avatar";
 import { GravatarUrl } from "@/utils/Gravatar";
 import { shortenEthAddress } from "@/utils/ethaddress";
 import useProfile, { profileStore } from "@/_core/hooks/useProfile";
@@ -31,7 +31,8 @@ export default function AuthButton() {
           <button
             type="button"
             className="bg-red-500 border p-4 rounded-full  uppercase text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
-            onClick={() => setModalLogin(true)}>
+            onClick={() => setModalLogin(true)}
+          >
             Connect
           </button>
         </>

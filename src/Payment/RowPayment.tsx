@@ -3,10 +3,13 @@ import ModalPayment from "../Modal/ModalPayment";
 import usePurchase from "@/_core/hooks/usePurchase";
 import useTicketApi from "@/_backend/data/requestTicket";
 import { useAccount } from "wagmi";
+import { useCheckNetworkChain } from "@/_core/hooks/contract/useWriteEVM";
+import { toast } from "react-toastify";
 
 export default function RowPayment({
   hasBorderBottom = true,
   padding = "px-6",
+  selectedChain,
   ...props
 }) {
   const border = hasBorderBottom ? "border-b-[1px] border-gray-600" : "";
@@ -16,25 +19,27 @@ export default function RowPayment({
 
   const [visible, setVisible] = useState(false);
 
-  const NFT_DETAIL = props?.listingDetail?.nfts?.find(
-    (o) => o?.network?.toLowerCase() === props?.network?.toLowerCase()
-  );
+  // const NFT_DETAIL = props?.listingDetail?.nfts?.find(
+  //   (o) => o?.network?.toLowerCase() === props?.network?.toLowerCase()
+  // );
   // console.log(NFT_DETAIL, "detail nft", props);
   const { address } = useAccount();
 
   // ticket [0] = address user
   // args -> [last] = ticket
   const value = [
-    true, // 1
-    props?.product_address, // sepolia //2 //product Address
-    "0x0000000000000000000000000000000000000000", // 3
+    !!props?.crypto?.is_native, // 1
+    props?.product_token?.smart_contract?.address, // sepolia //2 //product Address
+    props?.crypto?.is_native
+      ? "0x0000000000000000000000000000000000000000"
+      : props?.crypto?.token_address, // 3  // check if fiat or crypto
     props?.price_in_wei, //price //4
-    0, // token_id // 5
+    props?.product_token?.token_id, // token_id // 5  product contrat.id
     1, // //quantity //6
-    2, // token type, erc1155 //7
+    2, // token type, erc1155 //7 // (selectedChain?.smart_contract?.contract_type)
     0, // 8
     1000, // 9
-    "0x0000000000000000000000000000000000000000", //10
+    "0x0000000000000000000000000000000000000000", //10 // check from shop
   ];
   // change value when account is changed
 
@@ -47,41 +52,32 @@ export default function RowPayment({
     `
     props?.provider,
     props?.network,`,
-    props?.provider, // undefind
-    props?.network, //testnet-tara
+    props?.product_token?.network?.provider_name,
+    props?.product_token?.network?.name,
     props,
-    "DATA"
+    "DATA",
+    value
   );
 
-  const { write } = usePurchase(
-    props?.provider,
-    props?.network,
+  const { changingNetwork } = useCheckNetworkChain();
+  const { write, isLoading } = usePurchase(
+    props?.product_token?.network?.provider_name,
+    props?.product_token?.network?.name,
+    props?.product_token?.network?.chain_id,
     // props?.network,
     // abi structure for args?,
     {
-      contractAddress: props?.shop_address, //  ->
-      // contractAddress: props?.storeAddress, //  ->
+      contractAddress: selectedChain?.network?.theras_shop_address, //  ->
       contractName: "Theras Shop",
-      // contractName: props?.contractName,
-      // functionName: props?.functionPurchaseName, //buyProduct
       functionName: "buyProduct", //buyProduct
-      // change args into dynamic? from backend?
       args,
-      // args: [
-      //   // // address + timestamp
-      //   // `MODEL_${props?.listingDetail?.id}__${currentTimestamp}`, //todo: add address user
-      //   // // `MODEL_${props?.id}__${currentTimestamp}`,
-      //   // props?.price_in_wei,
-      //   // // props?.listingDetail?.listingId,
-      // ],
     }
   );
 
   const handlePurchase = async () => {
-    // props?.listingDetail?.listingId //args
-    // props?.listingNetwork?.storeAddress
-    // props?.listingNetwork?.contractName
-    // props?.listingNetwork?.functionPurchaseName
+    // changeNetwork first
+    // if evm
+    changingNetwork(props.product_token?.network?.chain_id);
 
     // request of ticket
     console.log("handle purchase");
@@ -135,27 +131,35 @@ export default function RowPayment({
     // doesnt matter? the block difference can be exploited if price changed?
 
     try {
-      if (args?.length === 11) {
-        write();
-      }
+      // if (args?.length === 11) {
+      console.log("RUNNINNGG WILD");
+
+      // cahnge into self
+      write([...value, ticketPurchase]);
+      // }
     } catch (error) {
+      console.log(error);
       //
     } finally {
+      // after sending
+      toast("Processing order");
       // send notify
       // alert("Processing payment");
     }
   };
 
-  if (!props?.network) {
+  if (!props?.crypto?.network) {
     return (
       <div className={`flex justify-between py-4 `}>
         <div
-          className={`${padding} ${border} w-60 pb-4 ml-2 mr-1 !font-bold  `}>
+          className={`${padding} ${border} w-60 pb-4 ml-2 mr-1 !font-bold  `}
+        >
           CHAIN
         </div>
         <div className={`${base} mr-1 uppercase !font-bold `}>CURRENCY</div>
         <div
-          className={`${base} mr-1 flex justify-center items-center !font-bold `}>
+          className={`${base} mr-1 flex justify-center items-center !font-bold `}
+        >
           PRICE
         </div>
 
@@ -167,30 +171,36 @@ export default function RowPayment({
   return (
     <>
       <div className={`flex justify-between py-4 `}>
+        {/* chain logo */}
         <div
-          className={`${padding} ${border} flex justify-center items-center  w-60 pb-4 ml-2 mr-1 !font-bold text-green-400  `}>
-          {props?.network_logo && props?.isCrypto ? (
+          className={`${padding} ${border} flex justify-center items-center  w-60 pb-4 ml-2 mr-1 !font-bold text-green-400  `}
+        >
+          {props?.is_crypto ? (
             <img
-              src={props?.network_logo}
-              className={`w-8 h-8  ${props?.bgChain}`}
+              src={props?.crypto?.network?.image_url}
+              className={`w-8 h-8  ${props?.bgChain ?? ""}`}
             />
           ) : (
             "FIAT"
           )}
         </div>
+        {/* -------CURRENCY */}
         <div
-          className={`${base} mr-1 uppercase flex justify-center items-center`}>
-          {props?.currency}
+          className={`${base} mr-1 uppercase flex justify-center items-center`}
+        >
+          {props?.crypto?.currency?.symbol}
         </div>
+
+        {/* -------PRICE */}
         {/* supply link contract */}
         <div className={`${base} mr-1 flex justify-center items-center`}>
-          {props?.currency && props?.isCrypto ? (
+          {props?.crypto?.currency?.image_url ? (
             <img
-              src={props?.symbolUrl}
-              className={`w-5 h-5 ${props?.bgToken}`}
+              src={props?.crypto?.currency?.image_url}
+              className={`w-5 h-5 ${props?.bgToken ?? ""}`}
             />
           ) : (
-            props?.symbol
+            props?.crypto?.currency?.symbol
           )}
           &nbsp;
           {props?.price}
@@ -198,23 +208,31 @@ export default function RowPayment({
         </div>
         {/* <div className={`${base} mr-1 uppercase`}>{props?.type}</div> */}
 
+        {/* -------BUTTON */}
         <div className={`${base} mr-2 flex justify-center `}>
-          {!props?.isCrypto && (
-            <button
-              disabled={props?.disable || props?.closed}
-              onClick={() => {
-                setVisible(true);
-              }}
-              className="bg-white  rounded-sm w-24 flex p-2 ">
-              <img src={props?.paymentImage} className="w-full h-6 " />
-            </button>
-          )}
+          {
+            // handling FIAT
+            !props?.is_crypto && (
+              <button
+                disabled={props?.disable || props?.closed}
+                onClick={() => {
+                  setVisible(true);
+                }}
+                className="bg-white  rounded-sm w-24 flex p-2 "
+              >
+                <img
+                  src={props?.fiat?.currency?.image_url}
+                  className="w-full h-6 "
+                />
+              </button>
+            )
+          }
           {/* not connect -> wallet connet */}
-          {props?.isCrypto && (
+          {props?.is_crypto && (
             <button
-              disabled={props?.disable || props?.closed}
+              disabled={isLoading || props?.disable || props?.closed}
               onClick={() => {
-                if (props?.isNative) {
+                if (props?.crypto?.is_native) {
                   //native token not require approval
                   handlePurchase();
                 } else {
@@ -226,8 +244,9 @@ export default function RowPayment({
                 props?.disable
                   ? "bg-gray-400 !cursor-not-allowed "
                   : "bg-orange-500"
-              } w-24  rounded-sm justify-center font-bold flex p-2 "`}>
-              {props?.disable ? "Closed" : "Buy"}
+              } w-24  rounded-sm justify-center font-bold flex p-2 "`}
+            >
+              {isLoading ? "Loading..." : props?.disable ? "Closed" : "Buy"}
             </button>
           )}
         </div>

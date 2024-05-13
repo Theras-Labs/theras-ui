@@ -15,18 +15,19 @@ export default function IconBox({
       {...props}
       className={`flex cursor-pointer ${
         hasBorder ? "border border-gray-500" : ""
-      } justify-between w-full bg-[#111322] rounded-xl p-6 ${className}`}>
+      } justify-between w-full bg-[#111322] rounded-xl p-6 ${className}`}
+    >
       <div className="">
         <Label className="text-gray-300 uppercase  !text-xs !font-bold">
-          chain {props?.network}
+          chain {props?.network?.name}
         </Label>
         {children}
       </div>
       <div className={` p-4  rounded-md  uppercase  ${bgIcon}`}>
-        {props?.network_logo ? (
-          <img src={props?.network_logo} className="w-8 h-8" />
+        {props?.network?.image_url ? (
+          <img src={props?.network?.image_url} className="w-8 h-8" />
         ) : (
-          props?.network
+          props?.network?.name
         )}
         {/* image */}
       </div>
