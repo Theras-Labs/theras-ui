@@ -34,7 +34,7 @@ export default function RowPayment({
       ? "0x0000000000000000000000000000000000000000"
       : props?.crypto?.token_address, // 3  // check if fiat or crypto
     props?.price_in_wei, //price //4
-    props?.product_token?.token_id, // token_id // 5  product contrat.id
+    props?.listingDetail?.detail?.id, // props?.product_token?.token_id, // token_id // 5  product contrat.id //
     1, // //quantity //6
     2, // token type, erc1155 //7 // (selectedChain?.smart_contract?.contract_type)
     0, // 8
@@ -59,7 +59,7 @@ export default function RowPayment({
     value
   );
 
-  const { changingNetwork } = useCheckNetworkChain();
+  const { changingNetwork, isProfileNetworkFound } = useCheckNetworkChain();
   const { write, isLoading } = usePurchase(
     props?.product_token?.network?.provider_name,
     props?.product_token?.network?.name,
@@ -77,6 +77,8 @@ export default function RowPayment({
   const handlePurchase = async () => {
     // changeNetwork first
     // if evm
+    toast("Requesting ticket, please wait for a while");
+
     changingNetwork(props.product_token?.network?.chain_id);
 
     // request of ticket
@@ -125,6 +127,7 @@ export default function RowPayment({
 
     // Update args with ticketPurchase
     setArgs([...value, ticketPurchase]);
+    toast("Processing order, redirecting to wallet");
 
     //will have problem on differnt time, in case price is change?...
     // so data should BE from BE too, and compute it on client later. not the other around
@@ -135,16 +138,13 @@ export default function RowPayment({
       console.log("RUNNINNGG WILD");
 
       // cahnge into self
-      write([...value, ticketPurchase]);
+      await write([...value, ticketPurchase]);
+      toast("Please wait for your transaction");
+
       // }
     } catch (error) {
       console.log(error);
       //
-    } finally {
-      // after sending
-      toast("Processing order");
-      // send notify
-      // alert("Processing payment");
     }
   };
 
@@ -246,7 +246,17 @@ export default function RowPayment({
                   : "bg-orange-500"
               } w-24  rounded-sm justify-center font-bold flex p-2 "`}
             >
-              {isLoading ? "Loading..." : props?.disable ? "Closed" : "Buy"}
+              {isLoading
+                ? "Loading..."
+                : props?.disable
+                  ? "Closed"
+                  : isProfileNetworkFound(
+                        // props?.
+                        props.product_token?.network?.chain_id,
+                        props.product_token?.network?.provider_name
+                      )
+                    ? "Buy"
+                    : "Switch network"}
             </button>
           )}
         </div>
