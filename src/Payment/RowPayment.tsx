@@ -75,76 +75,88 @@ export default function RowPayment({
   );
 
   const handlePurchase = async () => {
-    // changeNetwork first
-    // if evm
-    toast("Requesting ticket, please wait for a while");
+    if (props?.product_token?.network?.provider_name === "ink") {
+      console.log("PRODUCT IS INK AND WRITE HERE");
+      // todo: update with value, this is skip value for now as dev still learning
+      write([
+        // tokenIds,
+        [props?.listingDetail?.detail?.id],
+        // values
+        [1],
+      ]);
+      // purchase
+    } else {
+      // changeNetwork first
+      // if evm
+      toast("Requesting ticket, please wait for a while");
 
-    changingNetwork(props.product_token?.network?.chain_id);
+      changingNetwork(props.product_token?.network?.chain_id);
 
-    // request of ticket
-    console.log("handle purchase");
-    // Example usage
+      // request of ticket
+      console.log("handle purchase");
+      // Example usage
 
-    // "address", // msg.sender
-    // "bool", // isnative
-    // "address", // product address
-    // "address", //erc20 token
-    // "uint256", // payment amount
-    // "uint256", //productId //
-    // "uint256", //quantity  // 1
-    // "uint256", //tokenType // 2
-    // "uint256", //paymentAmount //
-    // "uint256", //payoutpercentDenominator //
-    //   "address", //brokerAddress //
+      // "address", // msg.sender
+      // "bool", // isnative
+      // "address", // product address
+      // "address", //erc20 token
+      // "uint256", // payment amount
+      // "uint256", //productId //
+      // "uint256", //quantity  // 1
+      // "uint256", //tokenType // 2
+      // "uint256", //paymentAmount //
+      // "uint256", //payoutpercentDenominator //
+      //   "address", //brokerAddress //
 
-    // get address contract, price, token_id, quantity, chain_id
-    const ticketParameters = {
-      types: [
-        "address",
-        "bool",
-        "address",
-        "address",
-        "uint256",
-        "uint256",
-        "uint256",
-        "uint256",
-        "uint256",
-        "uint256",
-        "address",
-      ],
-      values: [address, ...value],
-    };
+      // get address contract, price, token_id, quantity, chain_id
+      const ticketParameters = {
+        types: [
+          "address",
+          "bool",
+          "address",
+          "address",
+          "uint256",
+          "uint256",
+          "uint256",
+          "uint256",
+          "uint256",
+          "uint256",
+          "address",
+        ],
+        values: [address, ...value],
+      };
 
-    console.log("requesting ticket with", [address, ...value]);
-    // request of ticket
-    const ticketPurchase = await requestTicket(ticketParameters);
-    // const ticketPurchase = [
-    //   "0x0c68813590ec3b06debb2ec77f1204011533a9ba9395ee5b00f15d879c5628ef",
-    //   "0x2686f1e5cf901cea1411dad6e6d34b45a5f0445f2eb4bd6501f14afe1a78589f",
-    //   28,
-    // ]
-    // use ticketPurchase to include in the args again
+      console.log("requesting ticket with", [address, ...value]);
+      // request of ticket
+      const ticketPurchase = await requestTicket(ticketParameters);
+      // const ticketPurchase = [
+      //   "0x0c68813590ec3b06debb2ec77f1204011533a9ba9395ee5b00f15d879c5628ef",
+      //   "0x2686f1e5cf901cea1411dad6e6d34b45a5f0445f2eb4bd6501f14afe1a78589f",
+      //   28,
+      // ]
+      // use ticketPurchase to include in the args again
 
-    // Update args with ticketPurchase
-    setArgs([...value, ticketPurchase]);
-    toast("Processing order, redirecting to wallet");
+      // Update args with ticketPurchase
+      setArgs([...value, ticketPurchase]);
+      toast("Processing order, redirecting to wallet");
 
-    //will have problem on differnt time, in case price is change?...
-    // so data should BE from BE too, and compute it on client later. not the other around
-    // doesnt matter? the block difference can be exploited if price changed?
+      //will have problem on differnt time, in case price is change?...
+      // so data should BE from BE too, and compute it on client later. not the other around
+      // doesnt matter? the block difference can be exploited if price changed?
 
-    try {
-      // if (args?.length === 11) {
-      console.log("RUNNINNGG WILD");
+      try {
+        // if (args?.length === 11) {
+        console.log("RUNNINNGG WILD");
 
-      // cahnge into self
-      await write([...value, ticketPurchase]);
-      toast("Please wait for your transaction");
+        // cahnge into self
+        await write([...value, ticketPurchase]);
+        toast("Please wait for your transaction");
 
-      // }
-    } catch (error) {
-      console.log(error);
-      //
+        // }
+      } catch (error) {
+        console.log(error);
+        //
+      }
     }
   };
 
@@ -250,13 +262,16 @@ export default function RowPayment({
                 ? "Loading..."
                 : props?.disable
                   ? "Closed"
-                  : isProfileNetworkFound(
+                  : props?.product_token?.network?.provider_name === "evm"
+                    ? isProfileNetworkFound(
                         // props?.
                         props.product_token?.network?.chain_id,
                         props.product_token?.network?.provider_name
                       )
-                    ? "Buy"
-                    : "Switch network"}
+                      ? "Buy"
+                      : "Switch network"
+                    : // then it means non EVM -> if ink then
+                      "Buy"}
             </button>
           )}
         </div>

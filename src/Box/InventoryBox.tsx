@@ -22,7 +22,8 @@ export default function InventoryBox(props) {
           props?.index === props?.selected?.index
             ? "border-2 border-green-500 opacity-80"
             : "border-gray-600"
-        }`}>
+        }`}
+      >
         {isEquipped(props) && (
           <IoCodeDownloadOutline
             className="absolute right-0 m-1 mx-2 text-green-500"
@@ -31,33 +32,35 @@ export default function InventoryBox(props) {
         )}
         <div className="p-2  absolute text-red-500 z-10 opacity-80">
           <img
-            src={props?.minted?.network_logo}
+            src={props?.minted?.network?.image_url}
             className={`w-12 h-12 ${props?.minted?.bgChain}`}
           />
         </div>
         <img
-          src={props?.display?.assetUrl}
+          src={props?.image_url}
           className={`w-full h-full hovered-image  ${props?.display?.classNameImage}`}
         />
         <div
           onClick={props?.onClick}
-          className=" w-full   bottom-0 flex  items-center justify-center  p-2 right-0  absolute">
+          className=" w-full   bottom-0 flex  items-center justify-center  p-2 right-0  absolute"
+        >
           <Rarity>{props?.rarity}</Rarity>
         </div>
       </div>
       {/* mobile navigating */}
       <Link
-        to={`/own-product/${props?.id}`}
+        to={`/my-product/${props?.id}`}
         // {/* onClick={props?.onClick} */}
-        className="relative md:hidden border rounded-md h-[150px] hover:opacity-75 cursor-pointer">
+        className="relative md:hidden border rounded-md h-[150px] hover:opacity-75 cursor-pointer"
+      >
         <div className="px-2  absolute text-red-500">
           <img
-            src={props?.minted?.network_logo}
+            src={props?.minted?.network?.image_url}
             className={`w-12 h-12 ${props?.minted?.bgChain}`}
           />
         </div>
         <img
-          src={props?.display?.assetUrl}
+          src={props?.image_url}
           className={`w-full h-full hover:opacity-75  ${props?.display?.classNameImage}`}
         />
         <div className=" w-full   bottom-0 flex  items-center justify-center  p-2 right-0  absolute">

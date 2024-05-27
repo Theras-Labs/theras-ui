@@ -2,6 +2,7 @@ import React from "react";
 import EVMWallet from "./Wallets/EVMWallet";
 import StarknetWallet from "./Wallets/StarknetWallet";
 import AptosWallet from "./Wallets/AptosWallet";
+import SubstrateWallet from "./Wallets/SubstrateWallet";
 
 export default function AuthOptions() {
   return (
@@ -11,12 +12,13 @@ export default function AuthOptions() {
         <EVMWallet />
 
         {/* Aptos */}
-        <AptosWallet />
+        {/* <AptosWallet /> */}
 
         {/* Starknet */}
-        {/* <StarknetWallet /> */}
+        <StarknetWallet />
 
         {/* Substrate */}
+        <SubstrateWallet />
         {/* Solana */}
       </div>
     </div>

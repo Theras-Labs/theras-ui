@@ -5,6 +5,7 @@ import {
   shortenEthAddressMobile,
   shortenString,
 } from "@/utils/ethaddress";
+import { shortenSubstrateAddress } from "@/utils/substrate-address";
 
 export default function SimpleProfileCard({
   onClick = () => {},
@@ -20,7 +21,8 @@ export default function SimpleProfileCard({
     <div
       onClick={onClick}
       className={` w-full relative md:left-12 flex items-center  justify-between md:justify-center   p-2
-          ${isRow ? "" : ""}`}>
+          ${isRow ? "" : ""}`}
+    >
       <div className="h-8 w-8 md:h-16 md:w-16">
         <Avatar
           className="h-8 w-8 md:h-16 md:w-16"
@@ -30,10 +32,14 @@ export default function SimpleProfileCard({
 
       <div className="flex flex-col  md:min-w-90  ml-2 ">
         <span className="hidden md:block font-bold">
-          {shortenEthAddress(currentProfile?.address)}
+          {currentProfile?.provider === "evm"
+            ? shortenEthAddress(currentProfile?.address)
+            : shortenSubstrateAddress(currentProfile?.address)}
         </span>
         <span className="md:hidden">
-          {shortenEthAddressMobile(currentProfile?.address)}
+          {currentProfile?.provider === "evm"
+            ? shortenEthAddressMobile(currentProfile?.address)
+            : shortenSubstrateAddress(currentProfile?.address)}
         </span>
         {/* TGEM:
         <br /> */}
@@ -44,7 +50,8 @@ export default function SimpleProfileCard({
         <button
           type="button"
           className="bg-red-500 border p-4 rounded-full  uppercase text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
-          onClick={onDisconnect}>
+          onClick={onDisconnect}
+        >
           Disconnect
         </button>
       )}
